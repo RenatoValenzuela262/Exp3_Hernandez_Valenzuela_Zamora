@@ -1,7 +1,5 @@
 package com.proyecto.springboot.backend.springboot_backend.restcontrollers;
 
-import static org.mockito.Mockito.when;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -11,17 +9,19 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyecto.springboot.backend.springboot_backend.entities.Cliente;
 import com.proyecto.springboot.backend.springboot_backend.services.ClienteServiceImpl;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import org.springframework.http.MediaType;
 
 @SpringBootTest
@@ -78,4 +78,29 @@ public class ClienteRestControllersTest {
         .content(objectMapper.writeValueAsString(unCliente)))
         .andExpect(status().isCreated());
     }
+
+    @Test
+    public void modificarClienteTest() throws Exception {
+        Cliente clienteExistente = new Cliente(1L, "Cristiano Ronaldo", "cr7@gmail.com", "Bajos de Mena", "Visa");
+        Cliente clienteActualizado = new Cliente(1L, "Cristiano Ronaldo", "cr7nuevo@gmail.com", "La Florida", "Mastercard");
+
+        when(clienteserviceimpl.findById(1L)).thenReturn(Optional.of(clienteExistente));
+        when(clienteserviceimpl.save(any(Cliente.class))).thenReturn(clienteActualizado);
+        mockmvc.perform(put("/api/cliente/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(clienteActualizado)))
+            .andExpect(status().isOk());
+    }
+
+
+    @Test
+    public void eliminarClienteTest() throws Exception {
+        Cliente clienteExistente = new Cliente(1L, "Cristiano Ronaldo", "cr7@gmail.com", "Bajos de Mena", "Visa");
+
+        when(clienteserviceimpl.findById(1L)).thenReturn(Optional.of(clienteExistente));
+
+        when(clienteserviceimpl.delete(any(Cliente.class))).thenReturn(Optional.of(clienteExistente));
+
+        mockmvc.perform(delete("/api/cliente/1")).andExpect(status().isNoContent());
+    } 
 }

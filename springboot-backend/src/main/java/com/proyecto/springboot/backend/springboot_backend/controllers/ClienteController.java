@@ -28,7 +28,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Clientes", description = "Operaciones relacionadas con Clientes")
 @RestController
 @RequestMapping("api/cliente")
-
 public class ClienteController {
 
     @Autowired
@@ -73,7 +72,7 @@ public class ClienteController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))),
         @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
     })
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<?> modificar(@PathVariable Long id, @RequestBody Cliente unCliente){
         Optional<Cliente> clienteOptional = service.findById(id);
         if (clienteOptional.isPresent()){
@@ -93,17 +92,16 @@ public class ClienteController {
         @ApiResponse(responseCode = "204", description = "Cliente eliminado correctamente"),
         @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
     })
+    
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id){
+    public ResponseEntity<?> eliminar(@PathVariable Long id) {
         Cliente unCliente = new Cliente();
         unCliente.setId(id);
+
         Optional<Cliente> clienteOptional = service.delete(unCliente);
-        if (clienteOptional.isPresent()){
-            return ResponseEntity.ok(clienteOptional.orElseThrow());
+        if (clienteOptional.isPresent()) {
+            return ResponseEntity.noContent().build(); // 204 No Content
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build(); // 404 si no existía
     }
-
-
-
 }

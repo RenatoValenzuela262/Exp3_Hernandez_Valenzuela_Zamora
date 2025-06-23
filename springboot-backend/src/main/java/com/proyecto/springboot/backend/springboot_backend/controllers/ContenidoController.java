@@ -71,7 +71,7 @@ public class ContenidoController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Contenido.class))),
         @ApiResponse(responseCode = "404", description = "Contenido no encontrado")
     })
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<?> modificar(@PathVariable Long id, @RequestBody Contenido unContenido){
         Optional<Contenido> contenidoOptional = service.findById(id);
         if (contenidoOptional.isPresent()){
@@ -89,17 +89,17 @@ public class ContenidoController {
         @ApiResponse(responseCode = "204", description = "Contenido eliminado correctamente"),
         @ApiResponse(responseCode = "404", description = "Contenido no encontrado")
     })
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id){
-        Contenido unContenido = new Contenido();
-        unContenido.setId(id);
-        Optional<Contenido> contenidoOptional = service.delete(unContenido);
-        if(contenidoOptional.isPresent()){
-            return ResponseEntity.ok(contenidoOptional.orElseThrow());
-            
+    public ResponseEntity<?> eliminar(@PathVariable Long id) {
+        Contenido contenido = new Contenido();
+        contenido.setId(id);
+        Optional<Contenido> contenidoOptional = service.delete(contenido);
+
+        if (contenidoOptional.isPresent()) {
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
-
 
 }

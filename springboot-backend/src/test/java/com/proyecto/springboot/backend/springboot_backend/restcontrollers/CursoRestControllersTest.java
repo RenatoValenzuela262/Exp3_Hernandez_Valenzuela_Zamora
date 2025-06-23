@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyecto.springboot.backend.springboot_backend.entities.Curso;
 import com.proyecto.springboot.backend.springboot_backend.services.CursoServiceImpl;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -52,7 +52,6 @@ public class CursoRestControllersTest {
     catch(Exception ex){
       fail("El Testing lanzo un Error"+ ex.getMessage());
     }
-
   }
   @Test
   public void cursoNoExisteTest() throws Exception{
@@ -72,6 +71,30 @@ public class CursoRestControllersTest {
     .content(objectMapper.writeValueAsString(unCurso)))
     .andExpect(status().isCreated());
   }
-}
 
- 
+  @Test
+  public void modificarCursoTest() throws Exception {
+      Curso cursoExistente = new Curso(1L, "Ingles", "Nivelacion", true);
+      Curso cursoActualizado = new Curso(1L, "Ingles Avanzado", "Refuerzo nivel B2", false);
+
+      when(cursoserviceimpl.findById(1L)).thenReturn(Optional.of(cursoExistente));
+      when(cursoserviceimpl.save(any(Curso.class))).thenReturn(cursoActualizado);
+
+      mockmvc.perform(put("/api/cursos/1")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(cursoActualizado)))
+          .andExpect(status().isOk());
+  }
+  
+  @Test
+  public void eliminarCursoTest() throws Exception {
+      Curso cursoExistente = new Curso(1L, "Inglés", "Nivelación", true);
+
+      when(cursoserviceimpl.delete(any(Curso.class)))
+          .thenReturn(Optional.of(cursoExistente));
+
+      mockmvc.perform(delete("/api/cursos/1")) // ← usa plural si así está el controlador
+          .andExpect(status().isNoContent()); // 204
+  }
+
+}

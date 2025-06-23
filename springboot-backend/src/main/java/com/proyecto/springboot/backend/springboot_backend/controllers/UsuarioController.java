@@ -100,12 +100,11 @@ public class UsuarioController {
 
     @DeleteMapping("/{rut}")
     public ResponseEntity<?> eliminar(@PathVariable Long rut) {
-        Usuario unUsuario = new Usuario();
-        unUsuario.setRut(rut);
-        Optional<Usuario> usuarioOptional = service.delete(unUsuario);
+        Optional<Usuario> usuarioOptional = service.findByRut(rut);
         if (usuarioOptional.isPresent()) {
-            return ResponseEntity.ok(usuarioOptional.get());
+            service.delete(usuarioOptional.get());
+            return ResponseEntity.noContent().build(); // ← 204
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build(); // 404 si no existe
     }
 }

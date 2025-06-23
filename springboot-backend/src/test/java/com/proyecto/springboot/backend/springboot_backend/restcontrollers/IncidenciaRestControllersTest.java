@@ -1,7 +1,5 @@
 package com.proyecto.springboot.backend.springboot_backend.restcontrollers;
 
-import static org.mockito.Mockito.when;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyecto.springboot.backend.springboot_backend.entities.Incidencia;
 import com.proyecto.springboot.backend.springboot_backend.services.IncidenciaServiceImpl;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import org.springframework.http.MediaType;
 
 @SpringBootTest
@@ -77,5 +75,30 @@ public class IncidenciaRestControllersTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(unaIncidencia)))
         .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void modificarIncidenciaTest() throws Exception {
+        Incidencia incidenciaExistente = new Incidencia(1L, "Curso de matematicas con error en ver lista de alumnos", "Terminado", "Media");
+        Incidencia incidenciaActualizada = new Incidencia(1L, "Error corregido, revisión pendiente", "En Proceso", "Alta");
+
+        when(incidenciaserviceimpl.findById(1L)).thenReturn(Optional.of(incidenciaExistente));
+        when(incidenciaserviceimpl.save(any(Incidencia.class))).thenReturn(incidenciaActualizada);
+
+        mockmvc.perform(put("/api/incidencia/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(incidenciaActualizada)))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void eliminarIncidenciaTest() throws Exception {
+        Incidencia incidenciaExistente = new Incidencia(1L, "Curso de matemáticas con error en ver lista de alumnos", "Terminado", "Media");
+
+        when(incidenciaserviceimpl.delete(any(Incidencia.class)))
+            .thenReturn(Optional.of(incidenciaExistente));
+
+        mockmvc.perform(delete("/api/incidencia/1")) // ← usa plural si así está en el controlador
+            .andExpect(status().isNoContent()); // 204
     }
 }

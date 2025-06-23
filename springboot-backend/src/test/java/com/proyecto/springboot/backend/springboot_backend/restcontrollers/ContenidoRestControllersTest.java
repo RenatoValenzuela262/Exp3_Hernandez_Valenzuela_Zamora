@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyecto.springboot.backend.springboot_backend.entities.Contenido;
 import com.proyecto.springboot.backend.springboot_backend.services.ContenidoServiceImpl;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.ArgumentMatchers.any;
 @SpringBootTest
@@ -69,6 +69,29 @@ public class ContenidoRestControllersTest {
     .content(objectMapper.writeValueAsString(unContenido)))
     .andExpect(status().isCreated());
   }
-}
 
- 
+  @Test
+  public void modificarContenidoTest() throws Exception {
+      Contenido unContenido = new Contenido(Long.valueOf(1), "Matematicas", "Materia");
+      Contenido contenidoActualizado = new Contenido(Long.valueOf(2), "MatematicasGeometricas", "Materia");
+
+      when(contenidoserviceimpl.findById(1L)).thenReturn(Optional.of(unContenido));
+      when(contenidoserviceimpl.save(any(Contenido.class))).thenReturn(contenidoActualizado);
+      mockmvc.perform(put("/api/contenido/1")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(contenidoActualizado)))
+          .andExpect(status().isOk());
+  }
+
+  @Test
+  public void eliminarContenidoTest() throws Exception {
+      Contenido contenidoExistente = new Contenido(1L, "Nombre contenido", "Tipo contenido");
+
+      when(contenidoserviceimpl.delete(any(Contenido.class)))
+          .thenReturn(Optional.of(contenidoExistente));
+
+      mockmvc.perform(delete("/api/contenido/1")) // ← usa plural si el controlador lo usa
+          .andExpect(status().isNoContent()); // 204
+  }
+
+}

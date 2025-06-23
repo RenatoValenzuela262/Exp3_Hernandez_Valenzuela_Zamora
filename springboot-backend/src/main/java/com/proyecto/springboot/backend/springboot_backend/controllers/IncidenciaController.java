@@ -73,7 +73,7 @@ public class IncidenciaController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Incidencia.class))),
         @ApiResponse(responseCode = "404", description = "Incidencia no encontrado")
     })
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<?> modificar(@PathVariable Long id, @RequestBody Incidencia unaIncidencia){
         Optional<Incidencia> incidenciaOptional = service.findById(id);
         if (incidenciaOptional.isPresent()){
@@ -93,15 +93,14 @@ public class IncidenciaController {
         @ApiResponse(responseCode = "404", description = "Incidencia no encontrada")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id){
+    public ResponseEntity<?> eliminar(@PathVariable Long id) {
         Incidencia unaIncidencia = new Incidencia();
         unaIncidencia.setId(id);
         Optional<Incidencia> incidenciaOptional = service.delete(unaIncidencia);
-        if (incidenciaOptional.isPresent()){
-            return ResponseEntity.ok(incidenciaOptional.orElseThrow());
+
+        if (incidenciaOptional.isPresent()) {
+            return ResponseEntity.noContent().build(); // 204 No Content
         }
-        return ResponseEntity.notFound().build();
-
+        return ResponseEntity.notFound().build(); // 404 si no existe
     }
-
 }

@@ -74,7 +74,8 @@ public class CursoController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Curso.class))),
         @ApiResponse(responseCode = "404", description = "Curso no encontrado")
     })
-    @PutMapping
+    
+    @PutMapping("/{id}")
     public ResponseEntity<?> modificar(@PathVariable Long id, @RequestBody Curso unCurso){
         Optional<Curso> cursoOptional = service.findById(id);
         if (cursoOptional.isPresent()){
@@ -95,15 +96,14 @@ public class CursoController {
         @ApiResponse(responseCode = "404", description = "Curso no encontrado")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id){
+    public ResponseEntity<?> eliminar(@PathVariable Long id) {
         Curso unCurso = new Curso();
         unCurso.setId(id);
         Optional<Curso> cursoOptional = service.delete(unCurso);
-        if(cursoOptional.isPresent()){
-            return ResponseEntity.ok(cursoOptional.orElseThrow());
-            
-        }
-        return ResponseEntity.notFound().build();
-    }
 
+        if (cursoOptional.isPresent()) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        }
+        return ResponseEntity.notFound().build(); // 404 si no existe
+    }
 }
