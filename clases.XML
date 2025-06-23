@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Diagrama de Clases">
+    <mxGraphModel dx="1200" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Clase Profesor -->
+        <mxCell id="Profesor" value="Profesor" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="100" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Profesor_Atributos" value="&#43; nombre: String\n&#43; id: String" style="text;html=1;spacingTop=-20;" vertex="1" parent="Profesor">
+          <mxGeometry x="0" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Clase Curso -->
+        <mxCell id="Curso" value="Curso" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="100" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Curso_Atributos" value="&#43; nombre: String\n&#43; código: String" style="text;html=1;spacingTop=-20;" vertex="1" parent="Curso">
+          <mxGeometry x="0" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Asociación Profesor - Curso -->
+        <mxCell id="Profesor_Curso" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="Profesor" target="Curso">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Clase Examen -->
+        <mxCell id="Examen" value="Examen" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="300" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Examen_Atributos" value="&#43; tipo: String\n&#43; fecha: Date" style="text;html=1;spacingTop=-20;" vertex="1" parent="Examen">
+          <mxGeometry x="0" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Asociación Curso - Examen -->
+        <mxCell id="Curso_Examen" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="Curso" target="Examen">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
